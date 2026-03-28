@@ -169,6 +169,7 @@
     <string name="cipher_style_manbo">曼波语</string>
     <string name="cipher_style_bangboo">邦布语</string>
     <string name="cipher_style_Hilichurlian">丘丘语</string>
+    <string name="cipher_style_braille">盲文点阵</string>
     <string name="cipher_style_magicspell">魔法咒语</string>
 
     <string name="crypto_style_selector_label">密文语种选择</string>

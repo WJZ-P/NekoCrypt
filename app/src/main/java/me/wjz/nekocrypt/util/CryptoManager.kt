@@ -246,8 +246,12 @@ object CryptoManager {
         val finalMin = minOf(ciphertextStyleLengthMin, ciphertextStyleLengthMax)
         val finalMax = maxOf(ciphertextStyleLengthMin, ciphertextStyleLengthMax)
 
-        // 如果 finalMin 和 finalMax 相等，直接取这个值，否则在范围内取随机数
-        val count = if (finalMin == finalMax) finalMin else Random.nextInt(finalMin, finalMax + 1)
+        // 盲文模式下，词组数量翻倍
+        val actualMin = if (styleType == CiphertextStyleType.BRAILLE) finalMin * 2 else finalMin
+        val actualMax = if (styleType == CiphertextStyleType.BRAILLE) finalMax * 2 else finalMax
+
+        // 如果 actualMin 和 actualMax 相等，直接取这个值，否则在范围内取随机数
+        val count = if (actualMin == actualMax) actualMin else Random.nextInt(actualMin, actualMax + 1)
 
         // 先随机挑选词组
         val selectedParts = List(count) { content.random() }
@@ -288,6 +292,10 @@ enum class CiphertextStyleType(val displayNameResId:Int,val content:List<String>
         displayNameResId = R.string.cipher_style_manbo, //  曼波！
         content = listOf("曼波~","哈吉米~","哈吉米咩那咩路多~","曼波!","曼波...","欧码叽哩，曼波！","叮咚鸡！","哈压库！","哈压库~","哈吉米！","哦耶~","duang~")
     ),
+    BRAILLE(
+        displayNameResId = R.string.cipher_style_braille, // 盲文点阵
+        content = (0x2800..0x28FF).map { it.toChar().toString() } // U+2800 ~ U+28FF，共 256 个盲文 Unicode
+    ),
     MAGICSPELL(
         displayNameResId = R.string.cipher_style_magicspell, // 魔法咒语
         content = listOf(
@@ -300,8 +308,7 @@ enum class CiphertextStyleType(val displayNameResId:Int,val content:List<String>
             "𝓐𝓻𝓬𝓪𝓷𝓾𝓶 ", "𝓓𝓾𝓵𝓬𝓮𝓭𝓸 ", "𝓛𝓪𝓬𝓻𝓲𝓶𝓪 ", "𝓛𝓾𝓬𝓮𝓻𝓷𝓪 ", "𝓥𝓸𝓵𝓾𝓬𝓮𝓻 ",
             "𝓥𝓮𝓷𝓾𝓼𝓽𝓪𝓼 ", "𝓒𝓵𝓪𝓻𝓲𝓽𝓪𝓼 ", "𝓢𝓲𝓭𝓮𝓻𝓮𝓾𝓼 ", "𝓥𝓸𝓵𝓾𝓬𝓻𝓲𝓼 ", "𝓢𝓾𝓪𝓿𝓲𝓽𝓪𝓼 ",
             "𝓢𝓮𝓻𝓮𝓷𝓲𝓽𝓪𝓼 ", "𝓢𝓲𝓵𝓮𝓷𝓽𝓲𝓾𝓶 ", "𝓜𝓲𝓻𝓪𝓬𝓾𝓵𝓾𝓶 ", "𝓒𝓪𝓮𝓵𝓲𝓬𝓸𝓵𝓪 ", "𝓒𝓪𝓮𝓵𝓮𝓼𝓽𝓲𝓼 ",
-            "𝓐𝓮𝓽𝓮𝓻𝓷𝓲𝓽𝓪𝓼 ", "𝓒𝓸𝓻𝓾𝓼𝓬𝓪𝓽𝓲𝓸 ", "𝓛𝓲𝓺𝓾𝓮𝓼𝓬𝓮𝓻𝓮 ", "𝓜𝓮𝓵𝓵𝓲𝓯𝓵𝓾𝓾𝓼 ", "𝓕𝓻𝓪𝓰𝓻𝓪𝓷𝓽𝓲𝓪 "
-        )
+            "𝓐𝓮𝓽𝓮𝓻𝓷𝓲𝓽𝓪𝓼 ", "𝓒𝓸𝓻𝓾𝓼𝓬𝓪𝓽𝓲𝓸 ", "𝓛𝓲𝓺𝓾𝓮𝓼𝓬𝓮𝓻𝓮 ", "𝓜𝓮𝓵𝓵𝓲𝓯𝓵𝓾𝓾𝓼 ", "𝓕𝓻𝓪𝓰𝓻𝓪𝓷𝓽𝓲𝓪 ")
     );
     companion object{
         //  辅助函数
